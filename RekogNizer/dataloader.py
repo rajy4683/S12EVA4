@@ -249,7 +249,7 @@ def get_imagenet_loaders(train_path, test_path, transform_train=None, transform_
         #MotionBlur(blur_limit=7, always_apply=True, p=1),
         Resize(32, 32, interpolation=1, always_apply=True, p=1),
         Cutout(num_holes=1,max_h_size=8,max_w_size=8,always_apply=True,p=1,fill_value=[0.485*255, 0.456*255, 0.406*255]),
-        IAAFliplr(p=1),
+        IAAFliplr(p=0.5),
         #MotionBlur(blur_limit=7, always_apply=True, p=1),
         RandomBrightnessContrast(brightness_limit=0.2, contrast_limit=0.2, always_apply=True, p=1),
         Normalize(
