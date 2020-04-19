@@ -477,9 +477,17 @@ class S11ResNet(nn.Module):
     def __init__(self, num_classes=10,dropout=0.0):
         super(S11ResNet, self).__init__()
         self.in_planes = 64
+        self.resize_layer = nn.Sequential(
+            nn.Conv2d(3, 64, kernel_size=3, stride=1, padding=1, bias=False),
+            nn.BatchNorm2d(64),
+            nn.ReLU(),
+            nn.Conv2d(64, 64, kernel_size=3, stride=2, padding=1, bias=False),
+            nn.BatchNorm2d(64),
+            nn.ReLU(),
+        )
 
         self.prep_layer = nn.Sequential(
-            nn.Conv2d(3, self.in_planes, kernel_size=3, stride=1, padding=1, bias=False),
+            nn.Conv2d(64, self.in_planes, kernel_size=3, stride=1, padding=1, bias=False),
             nn.BatchNorm2d(self.in_planes),
             nn.ReLU()
         )
@@ -501,7 +509,9 @@ class S11ResNet(nn.Module):
         self.fc_layer = nn.Linear(512, 200)
 
     def forward(self, x):
-        out = self.prep_layer(x)
+        out = self.resize_layer(x)
+        out = self.prep_layer(out)
+        #out = self.prep_layer(x)
         out = self.layer1(out)
         out = self.layer2(out)
         out = self.layer3(out)
