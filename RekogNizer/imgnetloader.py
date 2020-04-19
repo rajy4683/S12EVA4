@@ -1,3 +1,15 @@
+"""
+    Custom DataSet class and utility methods based on standard DataSetFolder
+    but adapted to load and handle tiny-imagenet
+    Procedure to invoke/use this dataset:
+        imgnetloader.generate_timgnet_train_test_data(base_path, 
+                                                    split_pct=0.7, 
+                                                    train_transform=None, 
+                                                    test_transform=None )
+    which will return a shuffled dataset(shuffled across 'val' and 'train' folders)  
+"""
+
+
 from torchvision.datasets.vision import VisionDataset
 
 from PIL import Image
@@ -167,6 +179,7 @@ def default_loader(path):
         return accimage_loader(path)
     else:
         return pil_loader(path)
+
 
 def get_id_dictionary(path):
     id_dict = {}
