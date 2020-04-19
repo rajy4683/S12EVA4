@@ -22,6 +22,8 @@ hyperparameter_defaults = dict(
     anneal_strategy='linear',
     pct_start=0.208,
     cycle_momentum=False,
+    lr_policy="ocp",
+    split_pct=0.208,
     )
 
 def print_hyperparams():
