@@ -68,19 +68,26 @@ def main():
     #scheduler = None
     cycle_momentum = True if config.cycle_momentum == "True" else False
     print("Momentum cycling set to {}".format(cycle_momentum))
-    #scheduler = CyclicLR(optimizer, base_lr=config.lr*0.01, max_lr=config.lr, mode='triangular', gamma=1., cycle_momentum=True,step_size_up=2000)#, scale_fn='triangular',step_size_up=200)
-    scheduler = OneCycleLR(optimizer, 
-                            config.ocp_max_lr, 
-                            epochs=config.epochs, 
-                            cycle_momentum=cycle_momentum, 
-                            steps_per_epoch=len(trainloader), 
-                            base_momentum=config.momentum,
-                            max_momentum=0.95, 
-                            pct_start=0.208,
-                            anneal_strategy=config.anneal_strategy,
-                            div_factor=config.div_factor,
-                            final_div_factor=config.final_div_factor
-                           )
+    if (config.lr_policy == "clr"):
+        scheduler = CyclicLR(optimizer, 
+                             base_lr=config.lr*0.01, 
+                             max_lr=config.lr, mode='triangular', 
+                             gamma=1., 
+                             cycle_momentum=True,
+                             step_size_up=256)#, scale_fn='triangular',step_size_up=200)
+    else:
+        scheduler = OneCycleLR(optimizer, 
+                                config.ocp_max_lr, 
+                                epochs=config.epochs, 
+                                cycle_momentum=cycle_momentum, 
+                                steps_per_epoch=len(trainloader), 
+                                base_momentum=config.momentum,
+                                max_momentum=0.95, 
+                                pct_start=config.split_pct,
+                                anneal_strategy=config.anneal_strategy,
+                                div_factor=config.div_factor,
+                                final_div_factor=config.final_div_factor
+                            )
     
     final_model_path = traintest.execute_model(model_new, 
                 hyperparams.hyperparameter_defaults, 
