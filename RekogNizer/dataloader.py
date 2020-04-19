@@ -7,6 +7,7 @@ from albumentations import Compose, RandomCrop, Normalize, HorizontalFlip, Resiz
 from albumentations import (
     HorizontalFlip, Compose, RandomCrop, Cutout,Normalize, HorizontalFlip, RandomBrightnessContrast,
     Resize,RandomSizedCrop, MotionBlur,MultiplicativeNoise,InvertImg, IAAFliplr,
+	IAAPerspective,
 )
 from albumentations.pytorch import ToTensor
 import random
@@ -246,12 +247,13 @@ def get_imagenet_loaders(train_path, test_path, transform_train=None, transform_
     torch.manual_seed(hyperparams.hyperparameter_defaults['seed'])
     
     train_transform = Compose([
-        #MotionBlur(blur_limit=7, always_apply=True, p=1),
-        Resize(32, 32, interpolation=1, always_apply=True, p=1),
+        
+        #Resize(32, 32, interpolation=1, always_apply=True, p=1),
         Cutout(num_holes=1,max_h_size=8,max_w_size=8,always_apply=True,p=1,fill_value=[0.485*255, 0.456*255, 0.406*255]),
         IAAFliplr(p=0.5),
         #MotionBlur(blur_limit=7, always_apply=True, p=1),
         RandomBrightnessContrast(brightness_limit=0.2, contrast_limit=0.2, always_apply=True, p=1),
+		#IAAPerspective(scale=(0.05, 0.1), keep_size=True, always_apply=False, p=0.5),
         Normalize(
         mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225]
         ),
@@ -260,7 +262,7 @@ def get_imagenet_loaders(train_path, test_path, transform_train=None, transform_
 
     test_transform = Compose([
         #MotionBlur(blur_limit=7, always_apply=True, p=1),
-        Resize(32, 32, interpolation=1, always_apply=True, p=1),
+        #Resize(32, 32, interpolation=1, always_apply=True, p=1),
         Normalize(
         mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225]
         ),
